@@ -136,32 +136,19 @@ router.get('/sumCategory', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-//search by category
-router.get('/search-by-category', async (req, res) => {
+// 
+router.get('/TotalProd', async (req, res) => {
   try {
-    const { category } = req.query;
+    // Use the appropriate MongoDB aggregation pipeline to calculate sums
+    const sums = await Product.aggregate([
+      { $group: { _id: '$uniqueCategory', total: { $sum: '$quantity' } } }
+    ]);
 
-    // Use the appropriate MongoDB query to search for data matching the category
-    const searchResults = await Product.find({ category });
-
-    res.json(searchResults);
+    res.json(sums);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-router.get('/search-by-title', async (req, res) => {
-  try {
-    const { title } = req.query;
-
-    // Use the appropriate MongoDB query to search for data matching the category
-    const searchResults = await Product.find({ title });
-
-    res.json(searchResults);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 
 
 
